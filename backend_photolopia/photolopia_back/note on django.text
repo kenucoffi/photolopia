@@ -1,0 +1,537 @@
+to set up our django enviroment first we create folder 
+then we create our enviroment inside that folder by unsing this command
+'python3 -m venv env'
+
+to activate the enviroment run this command
+" venv/Scripts/activate"
+
+"to start django project we run this
+'django-admin startproject projectname .'
+"
+"to create app simpley we sey 
+'python manage.py startapp appname'///
+"
+"URL" stands for Uniform Resource Locator 
+--> it is the address that user enters in the browser to request for a particular web page
+--> ever "url" have a "behavior" which is when a person inter into url there is expected out put seen as a user
+--> "behavior" is handled by "view" which is python function which takes a request and return and response 
+--> "Support URL" 
+--> requst is a clint send to a server 
+--> when we are request there are import satuse code we should know
+--> but first "status code " is 3 digit code that the server response when requst is made
+--> 200 is succesful request to the server
+--> 400 bad requst which is error in request
+--> 401 unautorized some pages are autanticate and cant be accessed
+--> 404 not found which is the page is not existe 
+--> 500 internal server error which is error ocure in server
+--> 503 server is unavalable 
+type of requst 
+1. "get requst" this is used to retrive or to read resource from server
+--> we use "get requst" for only read data not to change
+2. "post requst" is used to create resource in server
+--> if we want to create new resource we use post requst
+3. "put requst" is used to update existing resource 
+4. "delete requst" is used to delete existing resource
+
+
+migration is two stape making magration and runing magration
+ther are commands to migration 
+1 "makemigrations" this is resposible for creating new magration based on change that are identified by the model
+2 "sqlmigrate" this command is display sql statment for migration
+3 "migrate" this command is fro running applying and unapplying magration
+4 "showmigrations" list the magration of project along with there status
+
+"django_magrations" table is help as to store into database all magration we do to the database
+
+this is how we fill the data in database using "python manage.py shell"
+
+from other_app.models import JobPost
+job_post_1 = JobPost( title = "first job post",description = "first new Job",salary = 3000)
+job_post_1.save()
+
+there is other wey to 
+
+JobPost.objects.create(title ="second job post", description = "wow another new job",salary = 2000)
+
+"we can fetch data from database using python shell which is 
+
+JobPost.objects.all()"
+
+""__str__" methods is tells django what to print when we need to fetch from data based
+forexample in JobPost class 
+def __str__(self):
+    title = self.title
+    return title
+this will print out 'title' when we are fetching from database"
+
+'there is filter methods in django that will return based on the filter value
+ JobPost.objects.filter(id=1)
+'
+
+"there is other we to get one objects but this will not work or
+show error if it is more then one value and empty
+
+JobPost.objects.get(salary=1000)
+"
+
+""exclude" is the opposit of filter what it will do is it will retrive data
+that are not much with the spesified values
+
+JobPost.objects.exclude(salary = 1000) if there is no much it
+will print all data "
+
+" we can limit ower data when we retrive data from data based
+using slising methods for example
+
+JobPost.objects.all()[0:2] this will print the first and the second element
+JobPost.objects.filter()[0:3]this also print from first upto third
+element
+"
+
+"we can order our data when we are retriving the data from database
+by using order_by methods for example
+ 
+JobPost.objects.order_by("title") this is retrive data in asending order
+JobPost.objects.order_by("-title") this is in desending order"
+JobPost.objects.order_by("?") this retrive data in random
+
+"
+
+"'fild lookup' which help as to retrive data that are greater than
+or less than the specified data 
+for example
+JobPost.objects.filter(salary__gte = 1000) this will print data that
+salary is greater than or equals to 1000
+so in this example first "salary__gte = 1000" salary is the attribut it
+it followed by __gte which means ">="
+
+JobPost.objects.filter(salary__lte = 1000) this will print data that salary
+is less than or equals to 1000
+
+there are lot of fild lookup in documentation
+"
+
+
+
+"we can update our values from our data base simpley this method
+firs assign the objects to variable and save it
+example
+
+job_post_1 = JobPost.objects.filter()[1]
+job_post_1.salary = 5000
+job_post_1.save()
+"
+
+"chaningqurys which is chaning objects lets see what it means
+forexample
+JobPost.objects.all().filter(salary=3000) in this code we chane two code
+all() and filter so it will print row that is salary=3000
+"
+"slugs used to make our url human readeble url it use our title to make slugs
+to make slugs first we need to import slugify from django.util.text
+in models.py the we create save method in into JobPost class likethis
+#here we import slugify
+from django.util.text import slugify
+    #this is save method in JobPost class
+    def save(self,*args, **kwargs):
+        # this is conditio if id not exist and the slug in database is None
+        # this if statemet help our slug not change even if we update our title
+        # this is a good practice
+        if not self.id or self.slug == None:
+            # we make slug using slugify by using out title from database
+            self.slug = slugify(self.title)
+        #then we return save() method in this when ever we make save() in our shell it will create a slug
+        return super(JobPost,self).save()
+"
+"
+aggrigation is database concept which is help as to get average ,max,min,mean etc of our data
+to use it we first import all from django.db.models like this
+from django.db.models import *
+
+then in our shell we type
+JobPost.objects.aggregate(Max("salary")) this will return the max of salary
+JobPost.objects.aggregate(Avg("salary")) this will return the ave of salary
+
+"
+" delete() this method is help as to delete from database 
+for example  JobPost.objects.filter(title__icontains = "kenu").delete()
+this will delete all data that the title contain the word kenu
+"
+
+"admin panel is help as to manage our website easly then by using terminals
+to enter into admin panel it is prebuilt url we spesify doman name folowed by admin/
+which is 127.0.0.0:8000/admin
+
+so it ask as user name and password for that we create user_name and password in terminals
+by using command "python manage.py createsuperuser"
+then we enter into admin panel
+"
+
+"how can we register our app in to admin panel 
+first we go to admin.py file and import JobPost class from other_app
+
+from other_app.models import JobPost
+then we register our JobPost to the admin
+admin.site.register(JobPost)
+"
+
+"we can custemise the view of our data in admin  to make our more efficent
+so to do that first we have to create JobAdmin class which inherit admin.ModelAdmin in admin.py file
+then we enter list of data we want in list_display tuple
+class JobAdmin(admin.ModelAdmin):
+    list_display =("title","salary","date")
+
+so before admin display only datas that return in __str__ method in models.py file
+but now it will desplay all datas as we want
+
+we can also have method of  filtering our data which 
+add to the right side bar of our admin panal to do this
+we just specified datas to filter in JobAdmin class to list_filter tuple
+'list_filter = ("data","salary")' 
+
+we can also create seach fild for our admin users like this
+'search_field = ("title","description")'
+so they can search by title and description
+
+we can also custumise the field of each column 
+what we do is we specify attribut we want to 'field' tuple
+field = ("title",data,"description","expiry")
+
+
+
+the other important topic is fieldset which help as 
+to modify the layout of each columns field and group them into sections
+so to do that 
+fieldset = (name_of_section,fields we want to desplay in the section it is dictionary)
+forexample
+fieldset =(
+    ("Besic Information",{"fields":("title","description")}),
+    ("More Information",{
+        "classes":"collapse",
+        "fields": ("salary","slug","date","expiry")})
+    )
+
+'classes:collapse'is css stayle that used to collapse our section
+so when we hit show it will expand and when we hit hide it will collapse
+
+"
+
+" in database there are relationship this relationship 
+can be tree 
+the first one is 'one to one' which is one entity is relation with only one entity
+for example 'employe to salary_account'
+
+here is how we create one to one relationship first we
+create Location class or table it have attribut 
+city,state,coutry,strit and zip
+class Location(models.Model):
+    street = models.CharField(max_length = 200)
+    city = models.CharField(max_length = 200)
+    state = models.CharField(max_length = 200)
+    country = models.CharField(max_length = 200)
+    zip = models.CharField(max_length = 200)
+
+then we create Location attribut in job that is one to one to Location table
+
+Location = model.OneToOneField(Location,on_delet=model.CASCADE,null=True)
+then we have to makemigrations and migrate our data
+
+after that we have to connect JobPost location and Location table
+to do that first we create datas in shell forexample
+first we import Location and JobPost then we create our data
+l1 =Location(street="something",city="somthing",state="somthing",country="something",zip= "something")
+l1.save()
+j1 = JobPost.objects.all()[0]
+j1.location = l1
+j1.save()
+
+this will connect the tables in one to one relation now we can
+accesse or filter data by both attribut for example
+Location.objects.filter(jobpost__title_startswith="f")
+JobPost.objects.filter(location__street = "something")
+
+
+the second one is 'one to many' which is one entity can have relation with many 
+for example custemer relation with order
+other example is author relation with jobpost
+so to do this first we create author class or table
+class Author(models.Model):
+    name= models.CharField(max_length=200)
+    company = models.CharField(max_length = 200)
+    designation = model.CharField(max_length = 200)
+
+in JobApp class we this author as foreinkey like this
+author = models.ForeinKey(Author,on_delet=models.CASCADE ,null = True )
+so this will connect Author and JobApp
+
+managing one to many relationship
+first we create author data like this
+author1 = Author(name="kenu",company="kandg",designation="manager") then we will save it
+author.save()
+then we will assign to job_post.author like this
+jobpost1 = JobPost.objects.all()[2]
+jobpost1.author = author1
+jobpost1.save()
+so now jobpost1.author is assigned to author1
+we can also retrive data 
+author1.jobpost_set.all()
+we can also see how many times author1 is assinged in jobpost.author1 by using
+author.jobpost_set.count()
+we can also filter outer author data by using jobpost data
+Author.objects.filter(jobpost__id=3)
+
+
+many to many relation ship is when the entity have relation with manyentity
+the example of many to many relation is student and course
+one student can enroll meltiple course and one course can enrolled by many students
+other example is jobpost to skills
+so to create many to one relation first we create class or table
+class Skills(models.Model):
+    name = models.CharField(max_length=200)
+then we create relation in jobpost class like this
+skills = models.ManytoManyField(Skills)
+
+now we can manage in to our shell
+so first we create data for skill then we connect them
+skill1 = Skills(name="coding")
+skill1.save()
+now we add to jobpost.skills the skill1 like this
+jobpost1 = JobPost.objects.all()[0]
+jobpost1.skills.add(skill1)
+jobpost1.save()
+
+we can also create skills using jobpost objects like this
+jobpost1.skills.create(name="writing")
+
+also we can add skills into jobpost
+skill1.jobpost_set.add(jobpost1)
+
+managing many to many relation in shell
+to retrive all skills in particular jobpost
+jobpost1.skills.all()
+
+JobPost.objects.filter(skills__id=1)
+we can remove skills from jobpost list by using this
+jobpost1.skills.remove(skill1)
+
+we can add multiple skills into particular job post
+jobpost1.skills.set([skill1,skill2])
+also we can add multiple job post into skills
+skill1.jobpost_set.add(jobpost1,jobpost2)
+"
+
+
+" create new app to make users to subscribe our job app
+so first we create "subscribe app" then we configure it 
+then we create html file into templet folder so in subscription we need
+first we need a user to submit his name,lastname and email so to do
+we need this form in html file
+
+ <form method="post">
+            {% csrf_token %}
+            <label for="f_name">first name</label>
+            <input type="text" id="f_name" name="firstname" placeholder="your firs name" required>
+            <br>
+            <label for="l_name">Last Name</label>
+            <input type="text" id = "l_name" name="lastname" placeholder="your last name" required>
+            <br>
+            <label for="email">email</label>
+            <input type="email" id = "email" name="email" placeholder="your email" required>
+            <br>
+            <input type="submit" value = "submit">
+
+        </form>
+    so in this code we dont have to forget this "{% csrf_token %}"
+    csrf stand from "cross site requst forgery" it is use full when the
+    form is "post requst"
+    
+"
+
+"we can use django to create form to do so 
+first we create forms.py file into our app then inside forms.py file
+//we import forms from django
+from django import forms
+
+//then we create class just like models that inhearet from "froms.Form"
+
+class SubscribeForm(forms.Form):
+    //we create input inside the class and it have type and maxlength
+    first_name = forms.CharField(max_length=100)
+    last_name = forms.CharField(max_length = 100)
+    email = forms.CharField(max_length = 100)
+
+// after we create class we go to views and import SubscribeForm from forms.py
+->insde view 
+from forms.py import SubscribeForm
+
+//then we create variabel name form that contain subscribeform class
+form = subscribeForm()
+//now our form is ready so we insert the form into context dictionary
+context = {"form":form}
+//boom that is it now we go to subscribe.html and we create form tag 
+inside form tag we past {{form}}
+//now if we see our page the form is created 
+
+"
+
+"
+//storing our form into database that is simple 
+first we create subscribeform variabel that contain post_requst of theform using
+subscribeform = SubscribeForm(request.Post)
+
+//now we get each data using cleaned_data dictionary inside subscribeform object
+// so to store into cleand_data the data shoude be valid
+first_name = subscribeform.cleand_data["first_name"]
+last_name = subscribeform.cleand_data["last_name"]
+email = subscribeform.cleand_data["email"]
+
+//now we can store into database we created subscribe model 
+data = Subscribe(first_name = first_name,last_name = last_name,email = email)
+data.save()
+//now the moment we submit if the data is valid the data will be stored inside the database
+
+""""
+
+""""" there are 3 ways to rendere our form
+
+1 form.as_p  which rap the form in p tag
+2 form.as_table  which rap the form in talble tags
+3 form.as_ul which is the form as unorderd list
+
+""""""
+
+
+"""" form options
+
+class SubscribeForm(forms.Form):
+    first_name = forms.CharField(max_length=100,required=False,label="Enter first name" )
+    last_name = forms.CharField(max_length = 100,disabled=True,help_text="it is optional)
+    email = forms.CharField(max_length = 100)
+
+required = False make the fild optional
+label = "Enter first name" wil change the fild name
+help_text = "enter only alpha character " this is also usefull
+disabled = True make the fild unediteble or we can not type any thing
+
+"""""
+-------------------------------------------
+
+"""""   form validators 
+form validators help as to collect custem information from user 
+or to restrict that the data is submited by the user
+
+so to do so first we hed over forms.py
+then we create validat_comma method
+def validat_comma(value):
+    if "," in value:
+        raise forms.ValidationError("invalid value")
+    return value
+
+now we insert into parametr of CharField in validators 
+validators=[validat_comma]
+
+
+""""""
+
+--------------------------------------------------
+
+""""""      rendering our form using for loop
+
+<form method="post">
+            {% csrf_token %}
+            {{empty}}
+            {% for field in form%} // in hire we get form from context dictioner from 
+                <div>
+                    {{field.errors}}
+                    <label for={{field.id_for_label}}>{{field.label}}</label>
+                    {{field}}
+                </div>
+                {% endfor %}
+                <input type="submit" value = "submit">
+        
+        </form> 
+
+"""""" 
+
+---------------------------------
+
+""""""    ModelForm  
+
+ModelForm help as to create form easly using the model we create
+
+from subscribe.models import Subscribe
+class SubscribeForm(forms.ModelForm):
+    class Meta:
+        model=
+        field="__all__ // or we can list all filds like this ["first_name","last_name","email"]
+        // this is the same output with the older form
+
+""""""""
+
+---------------------------------------------------
+
+""""""    we can save into data base simply by ModelForm 
+
+subscribeform = SubscribeForm(request.POST)
+if subscribeform.is_valid():
+     subscribeform.save()
+# we just can simply instansiat form and save it
+
+#we can custemise our label by using this
+first we import 
+from django.utils.translation import gettext_lazy as _
+
+#then inside our metaclase we create "labels" dictionary
+
+labels={
+    "first_name":_("Enter first name"),
+    "last_name":_("Enter Last Name"),
+    "email":_("Enter email"),
+}
+
+#similar for error massages we create  "error_massages"
+
+error_massages{
+    "first_name":{
+        required:_("you can not move forward with out filing first name")
+    }
+}
+
+
+"""""
+
+-------------------------------------------------
+
+
+"""""" to create option field 
+first we hed into subscribe.models.py file
+ add option list like this 
+ newpaperoption =[
+    ("W","weekly"),
+    ("M","Monthly"),
+ ] 
+ "W" and "M" is store into database and "weakly"and "monthly" option we choose in frontend
+
+ now we create option fild
+ option = models.CharField(max_length=2,choices=NewPostOption,default="M")
+
+choices=Newpostoption is to create option using the newpostoption list 
+default="M" is the default value from this field
+
+"""""""
+
+----------------------------------------------------------
+
+""""""" how to add css content into our app 
+
+first we create static folder into our app folder 
+inside static file we create folder tha equals to our app name
+then inside our folder we create main.css file 
+then inside main.css we style what we want
+
+we also create our js file inside our static folder
+
+the same for images 
+
+
+""""""""

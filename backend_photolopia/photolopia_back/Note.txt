@@ -1,0 +1,306 @@
+--> Searializers
+What is Serialization in Django?
+
+--> Serialization is the process of converting complex data types (like Django model instances or querysets) into Python data structures (dicts, lists) or JSON, so they can be easily rendered or sent via an API.
+--> to make Searialize our data first we create searialize.py file into our App
+and we Searialize class base on our previes model 
+
+from decimal import Decimal
+from rest_framework import serializers
+from store.models import Product,Collection,Reviews
+class CollectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields=["id","title","product_count"]
+    product_count = serializers.IntegerField()
+
+--> In Django REST Framework (DRF), we can build APIs in two main ways:
+1 . Class-Based Views (CBVs) — using APIView, GenericAPIView, or ViewSet.
+2 . Function-Based Views (FBVs) — using the @api_view decorator.
+
+
+
+# Function based views example
+# views.py
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Student
+from .serializers import StudentSerializer
+
+
+# GET is used to list and retrive 
+# POST Method is usd to create 
+# PUT Method is used to update data
+# DELETE Method is used to Delete data
+@api_view(['GET', 'POST'])
+def student_list(request):
+    # first we check if it is "GET"  
+    if request.method == 'GET':
+        # query our data students
+        students = Student.objects.all()
+        # the we serilize our query student 
+        serializer = StudentSerializer(students, many=True)
+        # then we return our serialized data
+        return Response(serializer.data)
+    
+    #check if it is "POST" Http method
+    elif request.method == 'POST':
+        
+        # we create our data from request data
+        serializer = StudentSerializer(data=request.data)
+        # we check if our data is valid or not
+        if serializer.is_valid():
+            # if it is valid we save it and return serialized data with states code 201
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # else we return serialized error with status code 400
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def student_detail(request, pk):
+    
+    # we check if the data is in database
+    #if it there then we continue else we rase an exception
+    try:
+        student = Student.objects.get(pk=pk)
+    except Student.DoesNotExist:
+        return Response({'error': 'Student not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    #to retrive one data from database
+    if request.method == 'GET':
+        serializer = StudentSerializer(student)
+        return Response(serializer.data)
+
+    # to update the specific data we use PUT
+    elif request.method == 'PUT':
+        # we use our previes data and our request data (new data)
+        serializer = StudentSerializer(student, data=request.data)
+        # we check if our new data is valid 
+        if serializer.is_valid():
+            # if it is valid we update and return new data
+            serializer.save()
+            return Response(serializer.data)
+        # else we return serialize error with 400 bad request
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+    # we also can delete our data using DELETE method
+    elif request.method == 'DELETE':
+        # if it not associated with any data we delete it
+        student.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# we update our urlpatterns 
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    # this is for Many retrive and Create
+    path('students/', views.student_list, name='student_list'),
+    # this is for 1 item update , retrive and delete based on primary key
+    path('students/<int:pk>/', views.student_detail, name='student_detail'),
+]
+
+
+--> class based views They allow you to organize your logic in reusable, 
+object-oriented classes instead of writing everything in function-based views.
+
+
+from rest_framework import generics
+from .models import Product
+from .serializers import ProductSerializer
+--> we can use generic library to 
+
+#ListCreateAPIView which is used to GET and POST method
+
+class ProductListCreateView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+#RetriveUpdateDestro which is used to GET, PUT and DELETE method
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+--> we update our urlspattern
+
+from django.urls import path
+from .views import ProductListCreateView, ProductDetailView
+urlpatterns = [
+    path('products/', ProductListCreateView.as_view(), name='product-list'),
+    path('products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
+]
+
+
+
+🧩 1. What Is a ViewSet?
+A ViewSet is a special kind of class-based view in DRF that automatically provides actions like:
+list() → GET all
+retrieve() → GET one
+create() → POST
+update() → PUT
+partial_update() → PATCH
+destroy() → DELETE
+Instead of writing separate views for each action, one ViewSet handles them all.
+
+from rest_framework import viewsets
+from .models import Product
+from .serializers import ProductSerializer
+
+
+# this class can us for all methods
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+--> We’ll use a router to automatically generate all URLs for this ViewSet.
+
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ProductViewSet
+
+# Create a router
+router = DefaultRouter()
+#basename is the name used by the router to generate the URL names for your viewset routes.
+# exmaple if basename = product then product-list for Get and Post and product-detail for our Get,Put,Delete
+router.register(r'products', ProductViewSet, basename='product')
+
+urlpatterns = [
+    path('', include(router.urls)),
+]
+
+
+🧩 1. What Are Nested Routers?
+
+A nested router lets you define routes where one resource (child) is related to another (parent).
+In regular routers, every ViewSet is top-level (like /products/).
+With nested routers, you can create subpaths like /categories/<category_id>/products/.
+
+# to use it first we install it
+
+pip install drf-nested-routers
+
+
+from django.urls import path ,include
+from . import views
+from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
+
+# first we create parent  router
+router = routers.DefaultRouter()
+router.register("Proudct_list_detail",views.Product_List_Detail)
+
+# in hire nested router take three parameter router(parent router ) ,name of parent router("Proudct_list_detail") , lookup_paramet (used to access primariy key (product))
+product_router = routers.NestedDefaultRouter(router ,"Proudct_list_detail",lookup="product")
+# now we register the new router(child router)
+product_router.register("review",views.ReiviewListDetail,basename="productReviwes")
+
+# and important thing to note is 
+
+in our views file 
+class ReiviewListDetail(ModelViewSet):
+    
+    serializer_class=ReviewSerializer
+    # this help as to query only review that assocuated with product_pk
+    def get_queryset(self):
+        return Reviews.objects.filter(product_id=self.kwargs['product_pk'])
+    # this help as to send product_pk contecst to ReviewsSerializer
+    def get_serializer_context(self):
+        return {'product_id':self.kwargs['product_pk']}
+
+in our serializer file
+    class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reviews  
+        fields = ["id","date","name","description"]   
+    
+    # this prevent manualy create product_id it just auto create product_id based on product_pk 
+    def create(self,validated_data):
+        product_id = self.context['product_id'] 
+        return Reviews.objects.create(product_id=product_id,**validated_data)
+       
+
+
+⚙️ DjangoFilterBackend, SearchFilter, and OrderingFilter
+
+These are built-in filters in DRF that make your API endpoints more flexible and powerful for users.
+They let you filter, search, and sort data directly
+using URL query parameters — without writing custom code
+
+#  DjangoFilterBackend
+Allows users to filter data by specific field values
+
+first we install django-filters packege
+ 
+ pip install django-filters
+
+from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Product
+from .serializers import ProductSerializer
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    
+    #in hire we  list filter_backend we want in an array
+    filter_backends = [DjangoFilterBackend]
+    # so in hire we speciafy by which field we want to filter
+    filterset_fields = ['category', 'price']
+
+
+🔍 2️⃣ SearchFilter — Keyword Search
+Allows simple text search across one or more fields 
+using a single query parameter (?search=).
+
+from rest_framework import filters
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    # by which fieild we want to search
+    search_fields = ['name', 'description']
+
+
+🔢 3️⃣ OrderingFilter — Sorting Results
+
+Allows users to sort data by specific fields (ascending or descending) using ?ordering=.
+
+from rest_framework import filters
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['price', 'name']
+    ordering = ['price']  # default ordering
+
+
+🧠 Combine Them All
+
+You can combine all three for a powerful API:
+
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_fields = ['category', 'price']
+    search_fields = ['name', 'description']
+    ordering_fields = ['price', 'name']
+
+

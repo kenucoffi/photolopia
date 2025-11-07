@@ -20,7 +20,7 @@ export default function Sidebar(){
                         <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">packeges</div>
                     </div>
                     <hr className="my-2 lg:hidden"/>
-                    <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">Location</div>
+                    <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl "><Link href="/Modula">Update profile</Link></div>
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">Event type</div>
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">rating</div>
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">contacts</div>
@@ -45,7 +45,7 @@ export default function Sidebar(){
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl " onClick={() => {issearch.Notsearch()}}><Link href='/photographers'>Photographers</Link></div>
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">packeges</div>
                     <hr className="my-2 "/>
-                    <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">Location</div>
+                    <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl "><Link href="/Modula">Update Profile</Link></div>
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">Event type</div>
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">rating</div>
                     <div className="px-2 py-2 font-bold text-gray-500 text-lg cursor-pointer hover:bg-white hover:text-blue-300 rounded-xl ">contacts</div>

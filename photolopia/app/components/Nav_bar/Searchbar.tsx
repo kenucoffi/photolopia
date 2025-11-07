@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export default function Searchbar(){
     const issearch = Searchuser()
-    function Change(e){
+    function Change(e:any){
         issearch.setUserenter(e.target.value)
     }
     return (
@@ -17,11 +17,7 @@ export default function Searchbar(){
             
                 <input placeholder="Search Photographer"  type="text" className="bg-gray-200 pl-2 rounded-2xl text-black border-5 active:border-blue-300 border-blue-300 w-full   focus:outline-none " onChange={Change}/>
                 
-                <div className="btn btn-circle bg-blue-300  border border-blue-400 items-center" onClick={()=>
-                {
-                    issearch.searched()
-
-                }}>
+                <div className="btn btn-circle bg-blue-300  border border-blue-400 items-center" onClick={()=>{issearch.searched()}}>
                     <Link href="/photographers"><Search size={24} color="white"/></Link>
                 </div>
             </div>
