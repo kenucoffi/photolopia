@@ -106,9 +106,10 @@ class ListPhotographerView(APIView):
         return Response(serializer.data)
 
 class PhotographerSearchView(ListAPIView):
+    queryset = PhotographerProfile.objects.all()
     serializer_class = SearchPhotographerSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ["first_name","last_name","speciality","location"]
+    search_fields = ["user__email","user__first_name","user__last_name","speciality","location"]
 
 
 

@@ -15,14 +15,14 @@ interface Login{
     password:String
 }
 interface ProfileModule{
-    bio : String
+    bio : string
     big_profile_image :File | null
     profile_image :File | null
-    location : String
-    speciality :String
-    phone: String
-    website : String
-    instagram : String
+    location : string
+    speciality :string
+    phone: string
+    website : string
+    instagram : string
 }
 
 export const register = async({email,password,first_name,last_name,user_type}:Register) => {
@@ -79,10 +79,9 @@ export const getUserData = async() => {
         const response = await axios.get("http://localhost:8000/user/userdata",{ withCredentials: true})
         alert("successfuly fetch user data")
         return response.data
-
     }
     catch{
-        return Error("feild to fatch the data")
+        return []
 
 
     }
@@ -111,3 +110,13 @@ export const updateprofileUser = async({bio,location,profile_image,big_profile_i
     alert(e)
   }
 }
+export  async function list_photographers(query:string){
+  try{
+    const response = await axios.get("http://localhost:8000/user/searchphotographer?search="+query)
+        return response.data.results
+    }
+    catch{
+        alert("erro fetch user")
+        return []
+    } 
+  }

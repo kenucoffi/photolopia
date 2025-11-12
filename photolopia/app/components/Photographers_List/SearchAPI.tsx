@@ -1,6 +1,15 @@
-export const getSearchData = async(search:String) =>{
-          const response  = await fetch("http://localhost:8000/user/searchphotographer?search="+{search})
-          console.log(response.json())
-          return response.json()
-      
+import axios from "axios"
+
+export const getSearchData = async(query:String) =>{
+          try{
+             const response  = await axios.get("http://localhost:8000/user/searchphotographer?search="+query)
+             return response.data
+             
+          }
+          catch(e:any){
+            alert(e)
+          }
+          finally{
+          alert("fetched successfully")
+          }
 }

@@ -47,6 +47,9 @@ class SearchPhotographerSerializer(serializers.ModelSerializer):
     user = UserDetailSerializer(read_only =True)
     first_name = serializers.CharField(source="user.first_name",read_only=True)
     last_name = serializers.CharField(source="user.last_name",read_only=True)
+    email = serializers.CharField(source="user.email",read_only=True)
     class Meta:
         model = PhotographerProfile
-        fields = ["user","first_name","last_name","location","profile_image","big_profile_image","speciality","phone","website","bio"] 
+        fields = ["user","email","first_name","last_name","location","profile_image","big_profile_image","speciality","phone","website","bio"] 
+
+  
