@@ -36,7 +36,12 @@ const SignUpModal = () => {
             <input placeholder='enter your email' onChange = {(e)=>{setEmail(e.target.value)}} type="email" className="w-[90%] p-3 m-3 bg-gray-100 rounded-xl" />
             <input placeholder='enter your password' onChange = {(e)=>{setPassword(e.target.value)}} type="password" className="w-[90%] p-3 m-3 bg-gray-100 rounded-xl" />
             <input placeholder='re-enter password' type="password" className="w-[90%] p-3 m-3 bg-gray-100 rounded-xl" />
-            <input placeholder='user type'  onChange = {(e)=>{setUser_type(e.target.value)}} type="text" className="w-[90%] p-3 m-3 bg-gray-100 rounded-xl" />
+            <select name='user_type' value={user_type} onChange = {(e)=>{setUser_type(e.target.value)}} className="w-[90%] p-3 m-3 bg-gray-100 rounded-xl" >
+                <option value="">--are you</option>
+                <option value="photographer">photographer</option>
+                <option value="client">client</option>
+            </select>
+
             <div className=" flex justify-center w-[90%] m-3 p-3 rounded-2xl bg-red-300 hover:bg-red-400 text-white">error submition</div>
             <input type = "submit"  className=" flex justify-center w-[90%] m-3 p-3 rounded-2xl bg-green-300 hover:bg-green-400 text-white cursor-pointer"/>
         </form>

@@ -26,7 +26,7 @@ interface Userprofile{
 
 const UpdateProfile = () => {
     const login = UserLogout()
-    const [values ,setValue] =useState<any[] >([])
+    const [values ,setValue] =useState<Userinfo | null  >(null)
     const [email ,setEmail] =useState<string>("")
     const [profile,setProfile] = useState<any[]>([])
     useEffect(() => {
@@ -42,13 +42,14 @@ const UpdateProfile = () => {
     },[login.IsAuthenticated])
 
 useEffect(()=>{
+    if (values != null){
+        setEmail(values.email)
+    }
     async function userProfile(){
-        values.map((data:Userinfo)=>  {setEmail(data.email)})
-        console.log("email " + email )
         const profile = await list_photographers(email)
         setProfile(profile)
     }
-    if (values != null ){
+    if (values != null){
         userProfile()
         console.log(profile)
     }
