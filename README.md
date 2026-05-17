@@ -97,3 +97,11 @@ Users can search photographers using:
 
 -> Only photographers can:
 1. Create posts
+
+->Future Improvements
+1.Real-time chat system
+2.Booking system
+3.Photographer ratings and reviews
+4.Payment integration
+
+-> Auther   Kenisa Tetemke  
