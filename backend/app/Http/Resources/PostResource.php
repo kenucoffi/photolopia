@@ -14,20 +14,39 @@ class PostResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            "id"=>$this->id,
-            "title"=>$this->title,
-            "description"=>$this->description,
-            "post_image"=>$this->image->path,
-            "post_type"=>$this->post_type,
-            "user"=>[
-                "first_name"=>$this->user->first_name,
-                "last_name"=>$this->user->last_name,
-                "id"=>$this->user->id,
-                "username"=>$this->user->username,
-                "portfolio"=>$this->user->photographer->speciality,
-                "profile"=>$this->user->photographer->profile_image->path
-            ]
-        ];
+        if($this->user->photographer->profileImage_id != null){
+            return [
+                "id"=>$this->id,
+                "title"=>$this->title,
+                "description"=>$this->description,
+                "post_image"=>$this->image->path,
+                "post_type"=>$this->post_type,
+                "user"=>[
+                    "first_name"=>$this->user->first_name,
+                    "last_name"=>$this->user->last_name,
+                    "id"=>$this->user->id,
+                    "username"=>$this->user->username,
+                    "portfolio"=>$this->user->photographer->speciality,
+                    "profile"=>$this->user->photographer->profile_image->path
+                ]
+            ];
+        }
+        else if($this->user->photographer->profileImage_id == null){
+            return [
+                "id"=>$this->id,
+                "title"=>$this->title,
+                "description"=>$this->description,
+                "post_image"=>$this->image->path,
+                "post_type"=>$this->post_type,
+                "user"=>[
+                    "first_name"=>$this->user->first_name,
+                    "last_name"=>$this->user->last_name,
+                    "id"=>$this->user->id,
+                    "username"=>$this->user->username,
+                    "portfolio"=>$this->user->photographer->speciality,
+                    "profile"=>null,
+                ]
+            ];
+        }
     }
 }

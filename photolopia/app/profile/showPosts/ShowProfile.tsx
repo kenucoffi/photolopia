@@ -20,6 +20,8 @@ interface PostInterface{
 const ShowPost = ({id}:ShowpostInterface) => {
   const [post ,setPost] = useState<PostInterface | null>(null)
   const change = Change()
+
+
   useEffect(()=>{
     async function userpost(){
        const response = await user_post()
@@ -32,12 +34,16 @@ const ShowPost = ({id}:ShowpostInterface) => {
   },[change.ischange])
   
   if(id=="1"){
+    
     return <div className="grid grid-cols-2 sm:grid-cols-3 space-x-2 space-y-2">{Array.isArray(post) && post.map((index)=>{
         return <Post_card post_type={index.post_type} post_image={index.post_image} title={index.title} description={index.description}/>
+  
+      
     })}</div>
   }
   else if(id=="2"){
     return <div className="grid grid-cols-2 sm:grid-cols-3 space-x-2 space-y-2">{Array.isArray(post) && post.map((index)=>{
+      
       if(index.post_type=="birth_day"){
         return <Post_card post_type={index.post_type} post_image={index.post_image} title={index.title} description={index.description}/>
       }
@@ -47,17 +53,23 @@ const ShowPost = ({id}:ShowpostInterface) => {
   else if(id=="3"){
     return <div className="grid grid-cols-2 sm:grid-cols-3 space-x-2 space-y-2">{Array.isArray(post) &&post.map((index)=>{
       if(index.post_type=="wedding"){
+        
         return <Post_card post_type={index.post_type} post_image={index.post_image} title={index.title} description={index.description}/>
       }
     })}</div>
   }
-  else{
+  else if(id=="4"){
     return <div className="grid grid-cols-2  sm:grid-cols-3 space-x-2 space-y-2">{Array.isArray(post)&&post.map((index)=>{
-      if(index.post_type=="other"){
+      
+      
+      if(index.post_type=="others"){
+       
         return <Post_card post_type={index.post_type} post_image={index.post_image} title={index.title} description={index.description}/>
       }
+      
     })}</div>
   }
+  
 
 
 }
